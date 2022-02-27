@@ -60,8 +60,8 @@ all: main-build
 main-build: FW_IVT.elf secondary-outputs
 
 # Tool invocations
-FW_IVT.elf: $(OBJS) $(USER_OBJS) C:\Users\jugaldo\Desktop\IVT-S\FW\FW_IVT\STM32F105RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "FW_IVT.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\jugaldo\Desktop\IVT-S\FW\FW_IVT\STM32F105RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="FW_IVT.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+FW_IVT.elf: $(OBJS) $(USER_OBJS) C:\GitHub\IVT-S\FW\FW_IVT\STM32F105RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "FW_IVT.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\GitHub\IVT-S\FW\FW_IVT\STM32F105RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="FW_IVT.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -15,6 +15,7 @@
 void Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX);
 void Start_IVT_Sensor 		  (void);
 void Stop_IVT_Sensor 		  (void);
+void CAN_ID_IVT_Sensor	 	  (void);
 
 /////////////////////////////////////////////////desarrollar
 void Init_IVT_Sensor 		  (void);
