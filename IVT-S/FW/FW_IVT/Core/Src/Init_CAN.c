@@ -13,6 +13,25 @@
 
 void Init_CAN (void){
 
+  //Configuracion periférico
+  hcan1.Instance = CAN1;
+  hcan1.Init.Prescaler = 5;
+  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_8TQ;		/** Recomendable para cálculo time quantas */
+  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;		/** http://www.bittiming.can-wiki.info 	   */
+  hcan1.Init.TimeTriggeredMode = DISABLE;
+  hcan1.Init.AutoBusOff = DISABLE;
+  hcan1.Init.AutoWakeUp = DISABLE;
+  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.ReceiveFifoLocked = DISABLE;
+  hcan1.Init.TransmitFifoPriority = DISABLE;
+
+  if (HAL_CAN_Init(&hcan1) != HAL_OK)
+  {
+	//Error_Handler();	   //JGD Generar Error
+  }
+
   //Inicializado Recepciones
   RX_Header.IDE		= CAN_ID_STD;
   RX_Header.StdId	= ID_CAN_DISPOSITIVO;
@@ -25,7 +44,7 @@ void Init_CAN (void){
   TX_Header.RTR 	= CAN_RTR_DATA;
   TX_Header.DLC 	= 8;
 
-  //Inicializado Filtro
+  //Inicializado Filtro Recepción
   sFilterConfig.FilterFIFOAssignment	= CAN_FILTER_FIFO0;
   sFilterConfig.FilterIdHigh			= 0x245<<5;
   sFilterConfig.FilterIdLow				= 0;
@@ -42,6 +61,7 @@ void Init_CAN (void){
 
 }
 
+
 void Envio_CAN (uint32_t ID, uint8_t Datos_Envio[8]) {
 
 		TX_Header.StdId 	= ID;
@@ -50,5 +70,5 @@ void Envio_CAN (uint32_t ID, uint8_t Datos_Envio[8]) {
 	{
 	   //JGD Generar Error
 	}
-	HAL_Delay(20);
+		HAL_Delay(20); //Delay necesario para vaciar mailbox de envíos
 }

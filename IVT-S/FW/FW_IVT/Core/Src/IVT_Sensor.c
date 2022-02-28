@@ -11,13 +11,12 @@
 #define  CONV_MIL 0.001
 #define  CONV_CEN 0.1
 
-uint32_t 	      dbg[10];			//JGD Borrar tras depurar
-uint8_t 		  Datos[8];
-eCAN_IVT_CAN_Data Datos_Sensor;
+uint8_t 		  Datos[8];			/*!< Array 8 bytes transmision datos CAN   */
+eCAN_IVT_CAN_Data Datos_Sensor;		/*!< Estructura Guardado Datos_Sensor      */
 
 
 /**
-  * @brief  Gestion de los datos recibidos por bus CAN, provenientes del sensor IVT.
+  * @brief  Gestión de los datos recibidos por bus CAN, provenientes del sensor IVT.
   * 		Recepciona mensaje y lo guarda en la variable correspodiente en la estructura Datos_Sensor.
   * @param  id_CAN_RX: id CAN del mensaje recibido.
   * @retval None
@@ -27,13 +26,6 @@ void Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX){
 	int32_t aux=0;
 
 	  switch (id_CAN_RX){
-
-		  case id_Msg_Command:
-			break;
-	      case id_Msg_Debug:
-	        break;
-	      case id_Msg_Response:
-	        break;
 
 	      case id_Msg_Result_I:
 	    	  aux = (RX_CAN_DATA[2]<<24)+(RX_CAN_DATA[3]<<16)+(RX_CAN_DATA[4]<<8)+(RX_CAN_DATA[5]);
@@ -61,15 +53,12 @@ void Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX){
 	        break;
 
 	      case id_Msg_Result_W:
-	    	  dbg[5]++;
 	        break;
 
 	      case id_Msg_Result_As:
-	    	  dbg[6]++;
 	        break;
 
 	      case id_Msg_Result_Wh:
-	    	  dbg[7]++;
 	        break;
 	  }
 }
@@ -149,4 +138,42 @@ void Init_Config_IVT_Sensor (void){
 	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
 
 	Guardado_IVT_Sensor();
+
+	/** Configura velodcidad tranmsión 500kbit/s 				 	 */
+	BitRate_IVT_Sensor	(kbits_500);
+
+    Stop_IVT_Sensor();
 }
+
+/**
+  * @brief  Configura velocidad de transmisión del bus CAN del sensor IVT.
+  * @param  Velocidades soportadas 250kbit/s, 500kbit/s y 1000Mbit/s.
+  * @retval None
+  */
+void BitRate_IVT_Sensor	(eCAN_IVT_CAN_BitRate Velocidad){
+
+	  switch (Velocidad){
+
+		  case kbits_250:
+			  Stop_IVT_Sensor();
+			  Datos[0] = RESTART_to_Bitrate; Datos[1] = kbits_250;
+			  Datos[2] = Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
+			  Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+			break;
+
+		  case kbits_500:
+			  Stop_IVT_Sensor();
+			  Datos[0] = RESTART_to_Bitrate; Datos[1] = kbits_500;
+			  Datos[2]= Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
+			  Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+			break;
+
+		  case Mbits_1000:
+			  Datos[0] = RESTART_to_Bitrate; Datos[1] = Mbits_1000;
+			  Datos[2] = Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
+			  Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+			break;
+	  }
+}
+
+
