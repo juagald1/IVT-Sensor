@@ -76,7 +76,7 @@ int main(void)
   Init_CAN();
 
   /* USER CODE END 2 */
-
+  Init_Config_IVT_Sensor();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

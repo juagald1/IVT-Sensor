@@ -50,4 +50,5 @@ void Envio_CAN (uint32_t ID, uint8_t Datos_Envio[8]) {
 	{
 	   //JGD Generar Error
 	}
+	HAL_Delay(20);
 }
