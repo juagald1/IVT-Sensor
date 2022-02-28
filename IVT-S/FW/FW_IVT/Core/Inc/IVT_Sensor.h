@@ -15,10 +15,13 @@
 void Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX);
 void Start_IVT_Sensor 		  (void);
 void Stop_IVT_Sensor 		  (void);
-void CAN_ID_IVT_Sensor	 	  (void);
 
-/////////////////////////////////////////////////desarrollar
-void Init_IVT_Sensor 		  (void);
+///////////////////////////////////////////////// Desarrollar
+void Init_Config_IVT_Sensor   (void);
+void Guardado_IVT_Sensor	  (void);
+void Reset_IVT_Sensor 		  (void);
+void id_CAN_IVT_Sensor	 	  (void);
+void BitRate_IVT_Sensor		  (void);
 
 typedef enum tCAN_IVT_CAN_ids{
 
@@ -57,7 +60,6 @@ typedef enum tCAN_IVT_CAN_Estados{
 	Run					= 0x01
 
 }eCAN_IVT_CAN_Estados;
-
 
 typedef struct tCAN_IVT_CAN_Data{
 	int32_t IVT_Corriente;
