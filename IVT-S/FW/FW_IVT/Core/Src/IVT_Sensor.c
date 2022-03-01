@@ -7,12 +7,14 @@
 
 #include "Init_CAN.h"
 #include "IVT_Sensor.h"
+#include "string.h"
 
 #define  CONV_MIL 0.001
 #define  CONV_CEN 0.1
 
-uint8_t 		  Datos[8];			/*!< Array 8 bytes transmision datos CAN   */
-eCAN_IVT_CAN_Data Datos_Sensor;		/*!< Estructura Guardado Datos_Sensor      */
+uint8_t 		  				Datos[8];			/*!< Array 8 bytes transmision datos CAN  */
+IVT_Sensor_t 					Sensor_IVT;			/*!< Estructura General Sensor IVT        */
+
 
 
 /**
@@ -27,38 +29,46 @@ void Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX){
 
 	  switch (id_CAN_RX){
 
+		  case id_Msg_Response:
+
+			  /*!< Respuesta a Get Serial Number       */
+			  if(RX_CAN_DATA[0] == 0xBB){
+			  	  aux = (RX_CAN_DATA[1]<<24)+(RX_CAN_DATA[2]<<16)+(RX_CAN_DATA[3]<<8)+(RX_CAN_DATA[4]);
+		    	  Sensor_IVT.Numero_Serie = aux;
+				  break;
+			  }
+			  /*!< Respuesta a Get_Measurement_Errors  */
+			  if(RX_CAN_DATA[0] == 0x80){
+				  //JGD SEGUIR DESARROLLAR FUNCION
+
+				  Sensor_IVT.Alarmas.Total_Errores = RX_CAN_DATA[2];
+				  break;
+			  }
+			break;
+
 	      case id_Msg_Result_I:
 	    	  aux = (RX_CAN_DATA[2]<<24)+(RX_CAN_DATA[3]<<16)+(RX_CAN_DATA[4]<<8)+(RX_CAN_DATA[5]);
-	    	  Datos_Sensor.IVT_Corriente = aux * CONV_MIL;
+	    	  Sensor_IVT.Datos.Corriente = aux * CONV_MIL;
 	        break;
 
 	      case id_Msg_Result_U1:
 	    	  aux = (RX_CAN_DATA[2]<<24)+(RX_CAN_DATA[3]<<16)+(RX_CAN_DATA[4]<<8)+(RX_CAN_DATA[5]);
-	    	  Datos_Sensor.IVT_Tension_1 = aux * CONV_MIL;
+	    	  Sensor_IVT.Datos.Tension_1 = aux * CONV_MIL;
 	        break;
 
 	      case id_Msg_Result_U2:
 	    	  aux = (RX_CAN_DATA[2]<<24)+(RX_CAN_DATA[3]<<16)+(RX_CAN_DATA[4]<<8)+(RX_CAN_DATA[5]);
-	    	  Datos_Sensor.IVT_Tension_2 = aux * CONV_MIL;
+	    	  Sensor_IVT.Datos.Tension_2 = aux * CONV_MIL;
 	        break;
 
 	      case id_Msg_Result_U3:
 	    	  aux = (RX_CAN_DATA[2]<<24)+(RX_CAN_DATA[3]<<16)+(RX_CAN_DATA[4]<<8)+(RX_CAN_DATA[5]);
-	    	  Datos_Sensor.IVT_Tension_3 = aux * CONV_MIL;
+	    	  Sensor_IVT.Datos.Tension_3 = aux * CONV_MIL;
 	        break;
 
 	      case id_Msg_Result_T:
 	    	  aux = (RX_CAN_DATA[2])+(RX_CAN_DATA[3]<<16)+(RX_CAN_DATA[4]<<8)+(RX_CAN_DATA[5]);
-	    	  Datos_Sensor.IVT_Temperatura = aux*CONV_CEN;
-	        break;
-
-	      case id_Msg_Result_W:
-	        break;
-
-	      case id_Msg_Result_As:
-	        break;
-
-	      case id_Msg_Result_Wh:
+	    	  Sensor_IVT.Datos.Temperatura = aux * CONV_CEN;
 	        break;
 	  }
 }
@@ -87,8 +97,9 @@ void Stop_IVT_Sensor (void){
 	Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
 
 	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
-}
 
+	memset(&Sensor_IVT, 0x00, sizeof (Sensor_IVT)); /*!< Puesta a 0 estructura de datos adquiridos por sensor IVT */
+}
 /**
   * @brief  Envío por bus CAN la señal de guardado en memoria del sensor IVT.
   * 		Debe usarse cada vez que se modifique la configuración del sensor.
@@ -97,8 +108,7 @@ void Stop_IVT_Sensor (void){
   */
 void Guardado_IVT_Sensor (void){
 	Datos[0] = STORE;
-	Datos[1] = Datos[2]= Datos[3] = Datos[4] =
-	Datos[5] = Datos[6] = Datos[7] = 0;
+	Datos[1] = Datos[2]= Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
 
 	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
 }
@@ -108,7 +118,7 @@ void Guardado_IVT_Sensor (void){
   * @param  None
   * @retval None
   */
-void Init_Config_IVT_Sensor (void){
+void Init_IVT_Sensor (void){
 
 	Stop_IVT_Sensor();
 
@@ -142,7 +152,7 @@ void Init_Config_IVT_Sensor (void){
 	/** Configura velodcidad tranmsión 500kbit/s 				 	 */
 	BitRate_IVT_Sensor	(kbits_500);
 
-    Stop_IVT_Sensor();
+	Stop_IVT_Sensor();
 }
 
 /**
@@ -150,7 +160,7 @@ void Init_Config_IVT_Sensor (void){
   * @param  Velocidades soportadas 250kbit/s, 500kbit/s y 1000Mbit/s.
   * @retval None
   */
-void BitRate_IVT_Sensor	(eCAN_IVT_CAN_BitRate Velocidad){
+void BitRate_IVT_Sensor	(CAN_IVT_CAN_BitRate_t Velocidad){
 
 	  switch (Velocidad){
 
@@ -176,4 +186,16 @@ void BitRate_IVT_Sensor	(eCAN_IVT_CAN_BitRate Velocidad){
 	  }
 }
 
+/**
+  * @brief  Obtiene el nÚmero de serie del sensor IVT y lo asigna a variable Numero_Serie.
+  * @param  None
+  * @retval None
+  */
+void Numero_Serie_IVT_Sensor (void){
 
+	while(Sensor_IVT.Numero_Serie == 0){
+	Datos[0] = Get_Serial_Number;
+	Datos[1] = Datos[2] = Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
+	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+	}
+}

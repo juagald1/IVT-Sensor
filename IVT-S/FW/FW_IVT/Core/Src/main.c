@@ -26,20 +26,20 @@ uint8_t test;	/*!< Variable para testear la adquisición de datos del sensor IVT
 int main(void)
 {
 
-  Init_HW  ();
-  Init_CAN ();
-  Init_Config_IVT_Sensor ();
+  Init_HW  				   ();
+  Init_CAN 				   ();
+  Init_IVT_Sensor 		   ();
 
   while (1)
   {
 	  if(test ==1){
-		  Start_IVT_Sensor();
-		  test =0;
+		 Start_IVT_Sensor  ();
+		 test =0;
 	  }
 
 	  if(test ==2){
-		  Stop_IVT_Sensor();
-		  test =0;
+		 Stop_IVT_Sensor   ();
+		 test =0;
 	  }
   }
 }
