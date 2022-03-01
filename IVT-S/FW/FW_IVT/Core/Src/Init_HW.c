@@ -1,9 +1,13 @@
-/*
- * Init_HW.c
- *
- *  Created on: 25 feb. 2022
- *      Author: Juan Galbis
- */
+/**
+**************************************************************************************
+\file          Init_HW.c
+\brief         Módulo que continen las funciones para inicializado del periferico CAN1
+\details	   y envio de datos.
+\author        Juan Galbis Domènech
+\version       1.0
+\date          25/02/2022
+**************************************************************************************/
+
 #include "stm32f1xx_hal.h"
 
 /**

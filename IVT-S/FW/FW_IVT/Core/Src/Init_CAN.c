@@ -1,9 +1,13 @@
-/*
- * Init_CAN.c
- *
- *  Created on: 25 feb. 2022
- *      Author: Juan Galbis
- */
+/**
+**************************************************************************************
+\file          Init_CAN.c
+\brief         Módulo que continen las funciones para inicializado del periferico CAN1
+			   y envio de datos.
+\details
+\author        Juan Galbis Domènech
+\version       1.0
+\date          25/02/2022
+**************************************************************************************/
 
 #include "stm32f1xx_hal.h"
 #include "Init_CAN.h"
@@ -11,6 +15,11 @@
 
 #define ID_CAN_DISPOSITIVO 0x100
 
+/**
+  * @brief Función Inicializado Periférico CAN1
+  * @param None
+  * @retval None
+  */
 void Init_CAN (void){
 
   //Configuracion periférico
@@ -33,16 +42,16 @@ void Init_CAN (void){
   }
 
   //Inicializado Recepciones
-  RX_Header.IDE		= CAN_ID_STD;
-  RX_Header.StdId	= ID_CAN_DISPOSITIVO;
-  RX_Header.RTR		= CAN_RTR_DATA;
-  RX_Header.DLC		= 8;
+  RX_Header.IDE							= CAN_ID_STD;
+  RX_Header.StdId						= ID_CAN_DISPOSITIVO;
+  RX_Header.RTR							= CAN_RTR_DATA;
+  RX_Header.DLC							= 8;
 
   //Inicializado Envios
-  TX_Header.IDE 	= CAN_ID_STD;
-  TX_Header.StdId 	= ID_CAN_SENSOR_IVT;
-  TX_Header.RTR 	= CAN_RTR_DATA;
-  TX_Header.DLC 	= 8;
+  TX_Header.IDE 						= CAN_ID_STD;
+  TX_Header.StdId 						= ID_CAN_SENSOR_IVT;
+  TX_Header.RTR 						= CAN_RTR_DATA;
+  TX_Header.DLC 						= 8;
 
   //Inicializado Filtro Recepción
   sFilterConfig.FilterFIFOAssignment	= CAN_FILTER_FIFO0;
@@ -61,7 +70,12 @@ void Init_CAN (void){
 
 }
 
-
+/**
+  * @brief Función para relizar envíos por el periférico CAN1
+  * @param ID
+  * @param Datos_Envio[8]
+  * @retval None
+  */
 void Envio_CAN (uint32_t ID, uint8_t Datos_Envio[8]) {
 
 		TX_Header.StdId 	= ID;
@@ -70,5 +84,5 @@ void Envio_CAN (uint32_t ID, uint8_t Datos_Envio[8]) {
 	{
 	   //JGD Generar Error
 	}
-		HAL_Delay(20); //Delay necesario para vaciar mailbox de envíos
+		HAL_Delay(20); //Delay para vaciar mailbox de envíos
 }

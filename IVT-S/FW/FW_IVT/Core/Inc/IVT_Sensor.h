@@ -13,9 +13,15 @@
 #define ID_CAN_SENSOR_IVT  0x411
 
 /**
-  * @brief  Enumerado que contiene los identifcadores CAN de los mensajes enviados por el sensor IVT
-  */
-typedef enum CAN_IVT_CAN_ids_s{
+************************************************************************************
+\typedef        tCAN_IVT_CAN_ids
+\brief          Tipo definido para guardado de los identifcadores CAN de los
+ 	 	 	 	mensajes enviados por el sensor IVT
+\struct         tCAN_IVT_CAN_ids
+\brief          Estructura para guardado de los identifcadores CAN de los mensajes
+ 	 	 	 	enviados por el sensor IVT
+**********************************************************************************/
+typedef enum eCAN_IVT_CAN_ids{
 
 	id_Msg_Command 		   = 0x411,
 	id_Msg_Debug 		   = 0x510,
@@ -29,12 +35,18 @@ typedef enum CAN_IVT_CAN_ids_s{
 	id_Msg_Result_As,
 	id_Msg_Result_Wh
 
-}CAN_IVT_CAN_ids_t;
+}tCAN_IVT_CAN_ids;
 
 /**
-  * @brief  Enumerado que contiene los comandos para interectuar por CAN con el sensor IVT
-  */
-typedef enum CAN_IVT_CAN_Comandos_s{
+************************************************************************************
+\typedef        tCAN_IVT_CAN_Comandos
+\brief          Tipo definido para guardado de los comandos	para interectuar por CAN
+ 	 	 	 	con el sensor IVT
+\struct         tCAN_IVT_CAN_Comandos
+\brief          Estructura para guardado de los comandos	para interectuar por CAN
+ 	 	 	 	con el sensor IVT
+**********************************************************************************/
+typedef enum eCAN_IVT_CAN_Comandos{
 
 	/** SET-CONFIG RESULT			*/
 	IVT_Msg_Result_I	   = 0x20,
@@ -68,97 +80,140 @@ typedef enum CAN_IVT_CAN_Comandos_s{
 	Get_Device_SW_Version  = 0x7A,
 	Get_Serial_Number      = 0x7B
 
-}CAN_IVT_CAN_Comandos_t;
+}tCAN_IVT_CAN_Comandos;
 
 /**
-  * @brief  Enumerado que contiene los estados de marcha/paro del sensor IVT
-  */
-typedef enum CAN_IVT_CAN_Estados_s{
+*******************************************************************************
+\typedef        tCAN_IVT_CAN_Estados
+\brief          Tipo definido para la identificación de los estados de
+ 	 	 	 	marcha/paro del sensor IVT
+\enum           eCAN_IVT_CAN_Estados
+\brief          Enumerado definido para la identificación de estados de
+ 	 	 	 	marcha/paro del sensor IVT
+******************************************************************************/
+typedef enum eCAN_IVT_CAN_Estados{
 
 	Stop 		     	= 0x00,
 	Run					= 0x01
 
-}CAN_IVT_CAN_Estados_t;
+}tCAN_IVT_CAN_Estados;
 
 /**
-  * @brief  Enumerado que contiene los distintos valores de disparo del sensor IVT
-  */
-typedef enum CAN_IVT_CAN_Trigger_Modo_s{
+*******************************************************************************
+\typedef        tCAN_IVT_CAN_Trigger_Modo
+\brief          Tipo definido para la identificación de los distintos
+				valores de disparo del sensor IVT
+\enum           eCAN_IVT_CAN_Trigger_Modo
+\brief          Enumerado definido para la identificación de los distintos
+				valores de disparo del sensor IVT
+******************************************************************************/
+typedef enum eCAN_IVT_CAN_Trigger_Modo{
 
 	Disabled	     	= 0x00,
 	Triggered			= 0x01,
 	Cyclic_Running   	= 0x02
 
-}CAN_IVT_CAN_Trigger_Modo_t;
+}tCAN_IVT_CAN_Trigger_Modo;
 
 /**
-  * @brief  Enumerado que contiene las distintas velocidades de tranmsión configurables del sensor IVT
-  */
-typedef enum CAN_IVT_CAN_BitRate_s{
+*******************************************************************************
+\typedef        tCAN_IVT_CAN_BitRate
+\brief          Tipo definido para la identificación de las velocidades de
+ 	 	 	 	transmisión configurables.
+\enum           eCAN_IVT_CAN_BitRate
+\brief          Enumerado definido para la identificación de las velocidades
+                de transmisión configurables.
+******************************************************************************/
+typedef enum eCAN_IVT_CAN_BitRate{
 
 	kbits_250	     	= 0x08,
 	kbits_500			= 0x04,
 	Mbits_1000   		= 0x02
 
-}CAN_IVT_CAN_BitRate_t;
+}tCAN_IVT_CAN_BitRate;
 
 /**
-  * @brief  Estructura que almacena los datos del sensor recibidos por CAN
-  */
-typedef struct CAN_IVT_CAN_Data_s{
+************************************************************************************
+\typedef        tCAN_IVT_CAN_Data
+\brief          Tipo definido para guardado de parametros medidos por el sensor IVT
+\struct         tCAN_IVT_CAN_Data
+\brief          Estructura para guardado de parametros medidos por el sensor IVT
+**********************************************************************************/
+typedef struct sCAN_IVT_CAN_Data{
+
 	float Corriente;
 	float Tension_1;
 	float Tension_2;
 	float Tension_3;
 	float Temperatura;
 
-}CAN_IVT_CAN_Data_t;
+}tCAN_IVT_CAN_Data;
 
 /**
-  * @brief  Estructura que almacena los flags de los errores generados durante la adquisición de datos
-  */
-typedef struct CAN_IVT_CAN_Error_Measurement_s{
+*******************************************************************************
+\typedef        tCAN_IVT_CAN_Error_Measurement
+\brief          Tipo definido para los flags del sensor IVT
+\struct         tCAN_IVT_CAN_Error_Measurement
+\brief          Estructura para guardar los flags de alarma del sensor IVT
+******************************************************************************/
+typedef struct sCAN_IVT_CAN_Error_Measurement{
 
-	uint8_t  ADC_Interrupt:1;
-	uint8_t  OVF_ADC_CH1:1;
-	uint8_t  UVF_ADC_CH1:1;
-	uint8_t  OVF_ADC_CH2:1;
-	uint8_t  UVF_ADC_CH2:1;
-	uint8_t  Vref:1;
-	uint8_t  Current_Measurement:1;
-	uint8_t  Thermal_EMF:1;
-	uint8_t  I_Open_Circuit:1;
-	uint8_t  U1_Open_Circuit:1;
-	uint8_t  U2_Open_Circuit:1;
-	uint8_t  U3_Open_Circuit:1;
-	uint8_t  ntch_Open_Circuit:1;
-	uint8_t  ntcl_Open_Circuit:1;
-	uint8_t  Calibration_Data:1;
-	uint32_t Total_Errores;
+	uint8_t Total_Errores;
+    union
+        {
+        uint8_t All;
+        struct
+        {
+        	uint8_t  ADC_Interrupt:1;
+        	uint8_t  OVF_ADC_CH1:1;
+        	uint8_t  UVF_ADC_CH1:1;
+        	uint8_t  OVF_ADC_CH2:1;
+        	uint8_t  UVF_ADC_CH2:1;
+        	uint8_t  Vref:1;
+        	uint8_t  Current_Measurement:1;
+        	uint8_t  Thermal_EMF:1;
+        	uint8_t  I_Open_Circuit:1;
+        	uint8_t  U1_Open_Circuit:1;
+        	uint8_t  U2_Open_Circuit:1;
+        	uint8_t  U3_Open_Circuit:1;
+        	uint8_t  ntch_Open_Circuit:1;
+        	uint8_t  ntcl_Open_Circuit:1;
+        	uint8_t  Calibration_Data:1;
+        	uint8_t  Reservado:1;
+        } Bit ;
+    }Flags;
 
-}CAN_IVT_CAN_Error_Measurement_t;
+}tCAN_IVT_CAN_Error_Measurement;
 
 
 /**
-  * @brief  Estructura general del Sensor IVT
-  */
-typedef struct IVT_Sensor_s{
+*******************************************************************************
+\typedef        tIVT_Sensor
+\brief          Tipo definido para gestion de sensor IVT
+\struct         tIVT_Sensor
+\brief          Estructura general para gestion de sensor IVT
+******************************************************************************/
+typedef struct sIVT_Sensor{
 
 	uint32_t 							Numero_Serie;
-	CAN_IVT_CAN_Data_t					Datos;
-	CAN_IVT_CAN_Error_Measurement_t		Alarmas;
+	tCAN_IVT_CAN_Data					Datos;
+	tCAN_IVT_CAN_Error_Measurement		Alarmas;
 
-}IVT_Sensor_t;
+}tIVT_Sensor;
 
+//////////////////////////////////////////////////////
+/* 				PROTOTIPOS FUNCIONES 				*/
+//////////////////////////////////////////////////////
 
-/** PROTOTIPOS FUNCIONES */
-
-void	 Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX);
 void	 Start_IVT_Sensor 		  (void);
 void	 Stop_IVT_Sensor 		  (void);
+void	 Stop_Reset_IVT_Sensor 	  (void);
+void	 Config_IVT_Sensor		  (void);
 void	 Guardado_IVT_Sensor	  (void);
-void	 Init_IVT_Sensor		  (void);
-void 	 BitRate_IVT_Sensor	  	  (CAN_IVT_CAN_BitRate_t Velocidad);
 void 	 Numero_Serie_IVT_Sensor  (void);
+void 	 Alarmas_IVT_Sensor   	  (uint8_t Byte);
+void	 Gestion_Datos_IVT_Sensor (uint32_t id_CAN_RX);
+void 	 BitRate_IVT_Sensor	  	  (tCAN_IVT_CAN_BitRate Velocidad);
+
 
 #endif /* INC_IVT_SENSOR_H_ */

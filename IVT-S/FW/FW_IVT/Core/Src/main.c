@@ -3,7 +3,6 @@
 \file          main.c
 \brief         Archivo principal del Firmware Isabellenhüette Sensor Driver for STM32
 \details
-
 \author        Juan Galbis Domènech
 \version       1.0
 \date          28/02/2022
@@ -17,7 +16,9 @@
 #include "Init_CAN.h"
 #include "IVT_Sensor.h"
 
-uint8_t test;	/*!< Variable para testear la adquisición de datos del sensor IVT*/
+uint8_t 			test;				/*!< Variable para testear la adquisición de datos del sensor IVT*/
+extern tIVT_Sensor 	Sensor_IVT;			/*!< Estructura General Sensor IVT        */
+
 
 /**
   * @brief  The application entry point.
@@ -28,7 +29,7 @@ int main(void)
 
   Init_HW  				   ();
   Init_CAN 				   ();
-  Init_IVT_Sensor 		   ();
+  Config_IVT_Sensor        ();
 
   while (1)
   {
@@ -37,9 +38,14 @@ int main(void)
 		 test =0;
 	  }
 
-	  if(test ==2){
-		 Stop_IVT_Sensor   ();
+	  if(test == 2){
+		 Stop_Reset_IVT_Sensor();
 		 test =0;
 	  }
+
+	  if(Sensor_IVT.Alarmas.Total_Errores > 0){
+		 Stop_IVT_Sensor();
+	  }
+
   }
 }

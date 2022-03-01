@@ -217,7 +217,7 @@ void CAN1_RX0_IRQHandler(void)
       //Error_Handler(); //JGD generar error
     }
 
-  	  Gestion_Datos_Sensor_IVT (RX_Header.StdId);
+  	  Gestion_Datos_IVT_Sensor (RX_Header.StdId);
   /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 

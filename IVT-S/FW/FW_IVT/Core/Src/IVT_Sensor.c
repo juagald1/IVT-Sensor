@@ -12,8 +12,8 @@
 #define  CONV_MIL 0.001
 #define  CONV_CEN 0.1
 
-uint8_t 		  				Datos[8];			/*!< Array 8 bytes transmision datos CAN  */
-IVT_Sensor_t 					Sensor_IVT;			/*!< Estructura General Sensor IVT        */
+uint8_t 		Datos[8];			/*!< Array 8 bytes transmision datos CAN  */
+tIVT_Sensor 	Sensor_IVT;			/*!< Estructura General Sensor IVT        */
 
 
 
@@ -23,7 +23,7 @@ IVT_Sensor_t 					Sensor_IVT;			/*!< Estructura General Sensor IVT        */
   * @param  id_CAN_RX: id CAN del mensaje recibido.
   * @retval None
   */
-void Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX){
+void Gestion_Datos_IVT_Sensor (uint32_t id_CAN_RX){
 
 	int32_t aux=0;
 
@@ -39,8 +39,7 @@ void Gestion_Datos_Sensor_IVT (uint32_t id_CAN_RX){
 			  }
 			  /*!< Respuesta a Get_Measurement_Errors  */
 			  if(RX_CAN_DATA[0] == 0x80){
-				  //JGD SEGUIR DESARROLLAR FUNCION
-
+				  Alarmas_IVT_Sensor (RX_CAN_DATA[1]);
 				  Sensor_IVT.Alarmas.Total_Errores = RX_CAN_DATA[2];
 				  break;
 			  }
@@ -83,6 +82,8 @@ void Start_IVT_Sensor (void){
 	Datos[0] = SET_MODE; Datos[1] = Run; Datos[2]=Run;
 	Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
 
+	memset(&Sensor_IVT, 0x00, sizeof (Sensor_IVT)); /*!< Puesta a 0 estructura de datos adquiridos por sensor IVT */
+
 	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
 }
 
@@ -92,6 +93,19 @@ void Start_IVT_Sensor (void){
   * @retval None
   */
 void Stop_IVT_Sensor (void){
+
+	Datos[0] = SET_MODE; Datos[1] = Stop; Datos[2]=Run;
+	Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
+
+	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+}
+
+/**
+  * @brief  Envío por bus CAN la señal de parada de adquisición de datos y reseteo de estructura de datos.
+  * @param  None
+  * @retval None
+  */
+void Stop_Reset_IVT_Sensor (void){
 
 	Datos[0] = SET_MODE; Datos[1] = Stop; Datos[2]=Run;
 	Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
@@ -118,7 +132,7 @@ void Guardado_IVT_Sensor (void){
   * @param  None
   * @retval None
   */
-void Init_IVT_Sensor (void){
+void Config_IVT_Sensor (void){
 
 	Stop_IVT_Sensor();
 
@@ -160,7 +174,7 @@ void Init_IVT_Sensor (void){
   * @param  Velocidades soportadas 250kbit/s, 500kbit/s y 1000Mbit/s.
   * @retval None
   */
-void BitRate_IVT_Sensor	(CAN_IVT_CAN_BitRate_t Velocidad){
+void BitRate_IVT_Sensor	(tCAN_IVT_CAN_BitRate Velocidad){
 
 	  switch (Velocidad){
 
@@ -198,4 +212,62 @@ void Numero_Serie_IVT_Sensor (void){
 	Datos[1] = Datos[2] = Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
 	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
 	}
+}
+
+/**
+  * @brief  Funcion que genera el flag de alarma correspondiente acorde al código
+  * 		de error recibido.
+  * @param  Byte, código de error recibido por CAN por parte del Sensor IVT.
+  * @retval None
+  */
+void Alarmas_IVT_Sensor (uint8_t Byte) {
+
+    switch (Byte)
+    {
+            case 0x01:
+        Sensor_IVT.Alarmas.Flags.Bit.ADC_Interrupt        =1;
+        break;
+            case 0x02:
+        Sensor_IVT.Alarmas.Flags.Bit.OVF_ADC_CH1          =1;
+        break;
+            case 0x03:
+        Sensor_IVT.Alarmas.Flags.Bit.UVF_ADC_CH1          =1;
+        break;
+            case 0x04:
+        Sensor_IVT.Alarmas.Flags.Bit.OVF_ADC_CH2          =1;
+        break;
+            case 0x05:
+        Sensor_IVT.Alarmas.Flags.Bit.UVF_ADC_CH2          =1;
+        break;
+            case 0x06:
+        Sensor_IVT.Alarmas.Flags.Bit.Vref                 =1;
+        break;
+            case 0x07:
+        Sensor_IVT.Alarmas.Flags.Bit.Current_Measurement  =1;
+        break;
+            case 0x08:
+        Sensor_IVT.Alarmas.Flags.Bit.Thermal_EMF          =1;
+        break;
+            case 0x09:
+        Sensor_IVT.Alarmas.Flags.Bit.I_Open_Circuit       =1;
+        break;
+            case 0x0A:
+        Sensor_IVT.Alarmas.Flags.Bit.U1_Open_Circuit      =1;
+        break;
+            case 0x0B:
+        Sensor_IVT.Alarmas.Flags.Bit.U2_Open_Circuit      =1;
+        break;
+            case 0x0C:
+        Sensor_IVT.Alarmas.Flags.Bit.U3_Open_Circuit      =1;
+        break;
+            case 0x0D:
+        Sensor_IVT.Alarmas.Flags.Bit.ntch_Open_Circuit    =1;
+        break;
+            case 0x0E:
+        Sensor_IVT.Alarmas.Flags.Bit.ntcl_Open_Circuit    =1;
+        break;
+            case 0x0F:
+        Sensor_IVT.Alarmas.Flags.Bit.Calibration_Data     =1;
+        break;
+    }
 }
