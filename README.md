@@ -1,19 +1,7 @@
 # IVT-Sensor
 Firmware desarrollado para gestionar y controlar el sensor IVT-S-1K-U3-I-CAN2-12/24.
 
-Se configura el sensor queda para obtener información de manera cíclica (lectura de corriente 20ms, tensiones 60ms y temperatura 120ms).
-
-Funciones Desarrolladas:
-- Start_IVT_Sensor 		 	 
-- Stop_IVT_Sensor
-- Stop_Reset_IVT_Sensor
-- Config_IVT_Sensor	
-- Guardado_IVT_Sensor
-- Numero_Serie_IVT_Sensor
-- Consulta_Alarmas_IVT_Sensor
-- Flags_Alarmas_IVT_Sensor
-- Gestion_Datos_IVT_Sensor
-- BitRate_IVT_Sensor
+Se configura el sensor para obtener información de manera cíclica (lectura de corriente 20ms, tensiones 60ms y temperatura 120ms).
 
 # Hardware Requerido
 - Sensor Isabellenhutte IVT-S
