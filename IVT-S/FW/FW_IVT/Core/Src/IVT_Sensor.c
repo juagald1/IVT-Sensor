@@ -1,10 +1,13 @@
-/*
- * IVT_Sensor.c
- *
- *  Created on: 21 feb. 2022
- *      Author: Juan Galbis
- */
-
+/**
+**************************************************************************************
+\file          IVT_Sensor.c
+\brief         Módulo que contiene las funciones desarrolladas para gestionar el
+ 	 	 	   sensor.
+\details
+\author        Juan Galbis Domènech
+\version       1.0
+\date          21/02/2022
+**************************************************************************************/
 #include "Init_CAN.h"
 #include "IVT_Sensor.h"
 #include "string.h"
@@ -39,7 +42,7 @@ void Gestion_Datos_IVT_Sensor (uint32_t id_CAN_RX){
 			  }
 			  /*!< Respuesta a Get_Measurement_Errors  */
 			  if(RX_CAN_DATA[0] == 0x80){
-				  Alarmas_IVT_Sensor (RX_CAN_DATA[1]);
+				  Flags_Alarmas_IVT_Sensor (RX_CAN_DATA[1]);
 				  Sensor_IVT.Alarmas.Total_Errores = RX_CAN_DATA[2];
 				  break;
 			  }
@@ -79,12 +82,14 @@ void Gestion_Datos_IVT_Sensor (uint32_t id_CAN_RX){
   */
 void Start_IVT_Sensor (void){
 
+	Numero_Serie_IVT_Sensor();
+
 	Datos[0] = SET_MODE; Datos[1] = Run; Datos[2]=Run;
 	Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
 
-	memset(&Sensor_IVT, 0x00, sizeof (Sensor_IVT)); /*!< Puesta a 0 estructura de datos adquiridos por sensor IVT */
-
 	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+
+	Sensor_IVT.Alarmas.Init_Loop = 1;  				/*!< Inicia Loop Alarmas */
 }
 
 /**
@@ -98,6 +103,8 @@ void Stop_IVT_Sensor (void){
 	Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
 
 	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+
+	Sensor_IVT.Alarmas.Init_Loop = 0;  				/*!< Detiene Loop Alarmas */
 }
 
 /**
@@ -220,7 +227,7 @@ void Numero_Serie_IVT_Sensor (void){
   * @param  Byte, código de error recibido por CAN por parte del Sensor IVT.
   * @retval None
   */
-void Alarmas_IVT_Sensor (uint8_t Byte) {
+void Flags_Alarmas_IVT_Sensor (uint8_t Byte) {
 
     switch (Byte)
     {
@@ -270,4 +277,21 @@ void Alarmas_IVT_Sensor (uint8_t Byte) {
         Sensor_IVT.Alarmas.Flags.Bit.Calibration_Data     =1;
         break;
     }
+}
+
+/**
+  * @brief  Función que envía la trama CAN al sensor IVT para consulta de errores de medida
+  * @param  None
+  * @retval None
+  */
+void Consulta_Alarmas_IVT_Sensor (void){
+
+	Datos[0] = Get_Measurement_Errors;
+	Datos[1] = Datos[2] = Datos[3] = Datos[4] = Datos[5] = Datos[6] = Datos[7] = 0;
+	Envio_CAN(ID_CAN_SENSOR_IVT, Datos);
+
+	/** Si Existe alguna alarma, se detiene el sensado y el loop de alarmas				 	 */
+	if(Sensor_IVT.Alarmas.Total_Errores > 0){
+		Stop_IVT_Sensor();
+	}
 }

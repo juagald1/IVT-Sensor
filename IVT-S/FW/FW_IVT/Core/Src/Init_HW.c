@@ -2,7 +2,8 @@
 **************************************************************************************
 \file          Init_HW.c
 \brief         Módulo que continen las funciones para inicializado del periferico CAN1
-\details	   y envio de datos.
+			   y envio de datos.
+\details
 \author        Juan Galbis Domènech
 \version       1.0
 \date          25/02/2022

@@ -159,6 +159,7 @@ typedef struct sCAN_IVT_CAN_Data{
 typedef struct sCAN_IVT_CAN_Error_Measurement{
 
 	uint8_t Total_Errores;
+	uint8_t Init_Loop;
     union
         {
         uint8_t All;
@@ -205,15 +206,16 @@ typedef struct sIVT_Sensor{
 /* 				PROTOTIPOS FUNCIONES 				*/
 //////////////////////////////////////////////////////
 
-void	 Start_IVT_Sensor 		  (void);
-void	 Stop_IVT_Sensor 		  (void);
-void	 Stop_Reset_IVT_Sensor 	  (void);
-void	 Config_IVT_Sensor		  (void);
-void	 Guardado_IVT_Sensor	  (void);
-void 	 Numero_Serie_IVT_Sensor  (void);
-void 	 Alarmas_IVT_Sensor   	  (uint8_t Byte);
-void	 Gestion_Datos_IVT_Sensor (uint32_t id_CAN_RX);
-void 	 BitRate_IVT_Sensor	  	  (tCAN_IVT_CAN_BitRate Velocidad);
+void	 Start_IVT_Sensor 		 	 (void);
+void	 Stop_IVT_Sensor 		 	 (void);
+void	 Stop_Reset_IVT_Sensor 	 	 (void);
+void	 Config_IVT_Sensor		 	 (void);
+void	 Guardado_IVT_Sensor	  	 (void);
+void 	 Numero_Serie_IVT_Sensor  	 (void);
+void	 Consulta_Alarmas_IVT_Sensor (void);
+void 	 Flags_Alarmas_IVT_Sensor    (uint8_t Byte);
+void	 Gestion_Datos_IVT_Sensor	 (uint32_t id_CAN_RX);
+void 	 BitRate_IVT_Sensor	  	 	 (tCAN_IVT_CAN_BitRate Velocidad);
 
 
 #endif /* INC_IVT_SENSOR_H_ */
