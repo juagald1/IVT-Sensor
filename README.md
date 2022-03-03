@@ -14,8 +14,6 @@ Se configura el sensor para obtener información de manera cíclica (lectura de 
 - STM32CubeIDE
 - canAnalyser3 Mini (Opcional)
 
-#  Montaje Pruebas
-
 #  Notas
 - El firmware desarrollado no implementa todas las funciones disponibles en el datasheet, ampliar segun aplicación.
 - Usar un interfaz CAN a USB es recomendable para depurar en tiempo real los mensajes intercambiados entre el sensor y el microcontrolador.
