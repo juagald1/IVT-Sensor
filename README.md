@@ -1,5 +1,5 @@
 # IVT-Sensor
-Firmware desarrollado para gestionar y controlar el sensor IVT-S-1K-U3-I-CAN2-12/24.
+Firmware desarrollado para gestión del sensor IVT-S-1K-U3-I-CAN2-12/24.
 
 Se configura el sensor para obtener información de manera cíclica (lectura de corriente 20ms, tensiones 60ms y temperatura 120ms).
 
